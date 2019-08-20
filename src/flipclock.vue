@@ -35,12 +35,12 @@ export default {
      */
     options: {
       type: Object,
-      default() {
+      default: function() {
         return {};
       }
     }
   },
-  data() {
+  data: function() {
     return {
       clock: null,
       convert: {
@@ -51,24 +51,24 @@ export default {
       }
     };
   },
-  created() {
+  created: function() {
     this.$nextTick(() => {
       this.init(this.options);
     });
   },
   watch: {
     options: {
-      handler(val) {
+      handler: function(val) {
         this.reset(val);
       },
       deep: true
     },
-    digit(val) {
+    digit: function(val) {
       console.warn('deprecated. please use `options.digit` instead');
     }
   },
   methods: {
-    init(options) {
+    init: function(options) {
       options = options || {};
       this.destroyClock();
       this.clock = new FlipClock(
@@ -86,16 +86,14 @@ export default {
       ) {
         for (var key in options.divider) {
           var el = document.querySelector(
-            `.flip-clock-divider.${this.convert[key]}`
+            '.flip-clock-divider.VAR'.replace('VAR', this.convert[key])
           );
           if (el) {
             el.innerHTML = options.divider[key];
           } else if (this.convert[key] === 'last') {
             this.$refs.flipclock.appendChild(
               FlipClock.Base.createDom(
-                `<span class="flip-clock-divider">${
-                  options.divider[key]
-                }</span>`
+                '<span class="flip-clock-divider">VAR</span>'.replace('VAR', options.divider[key])
               )
             );
           }
@@ -104,19 +102,19 @@ export default {
       options.time && this.clock.setTime(options.time);
       options.time && this.clock.autoStart && this.clock.start();
     },
-    instance() {
+    instance: function() {
       return this.clock;
     },
-    trigger(event, params) {
+    trigger: function(event, params) {
       this.clock && this.clock[event] && this.clock[event](arguments.slice(1));
     },
-    start(callback) {
+    start: function(callback) {
       this.clock && this.clock.start(callback);
     },
-    stop(callback) {
+    stop: function(callback) {
       this.clock && this.clock.stop(callback);
     },
-    reset(options, callback) {
+    reset: function(options, callback) {
       if (typeof options === 'function') {
         callback = options;
         options = null;
@@ -127,38 +125,38 @@ export default {
         this.init(options);
       }
     },
-    increment() {
+    increment: function() {
       this.clock && this.clock.increment();
     },
-    decrement() {
+    decrement: function() {
       this.clock && this.clock.decrement();
     },
-    loadClockFace(name, options) {
+    loadClockFace: function(name, options) {
       this.clock && this.clock.loadClockFace(name, options);
     },
-    loadLanguage(name) {
+    loadLanguage: function(name) {
       this.clock && this.clock.loadLanguage(name);
     },
-    setCountdown(value) {
+    setCountdown: function(value) {
       this.clock && this.clock.setCountdown(value);
     },
-    getTime() {
+    getTime: function() {
       return this.clock ? this.clock.getTime().time : 0;
     },
-    setTime(value) {
+    setTime: function(value) {
       this.clock && this.clock.setTime(value);
     },
-    setOptions(options) {
+    setOptions: function(options) {
       this.clock && this.clock.setOptions(options);
     },
-    destroyClock() {
+    destroyClock: function() {
       if (this.clock) {
         this.clock.stop();
         this.clock = null;
       }
     }
   },
-  beforeDestroy() {
+  beforeDestroy: function() {
     this.destroyClock();
   }
 };
